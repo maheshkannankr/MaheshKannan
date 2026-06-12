@@ -1,0 +1,183 @@
+'use client';
+
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+
+import Navbar from '@/components/Navbar';
+import Section from '@/components/Section';
+
+import ScrollArrow from '@/components/ScrollArrow';
+
+import { sections } from '@/data/sections';
+
+/* =========================
+   MAIN PAGE
+========================= */
+export default function Home() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const isAnimating = useRef(false);
+
+  /* =========================
+     NAVIGATION FUNCTIONS
+  ========================= */
+  const goToSmooth = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= sections.length) return;
+      if (index === activeIndex) return;
+
+      isAnimating.current = true;
+      setActiveIndex(index);
+
+      setTimeout(() => {
+        isAnimating.current = false;
+      }, 650);
+    },
+    [activeIndex, sections.length],
+  );
+
+  const goToInstant = (index: number) => {
+    if (index < 0 || index >= sections.length) return;
+
+    goToSmooth(index);
+  };
+  const safeIndex =
+    activeIndex >= 0 && activeIndex < sections.length ? activeIndex : 0;
+
+  /* =========================
+     WHEEL CONTROL (IMPROVED)
+  ========================= */
+  useEffect(() => {
+    let wheelLock = false;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (isAnimating.current || wheelLock) return;
+
+      if (Math.abs(e.deltaY) < 40) return;
+
+      wheelLock = true;
+      setTimeout(() => (wheelLock = false), 300);
+
+      if (e.deltaY > 0 && activeIndex < sections.length - 1) {
+        goToSmooth(activeIndex + 1);
+      } else if (e.deltaY < 0 && activeIndex > 0) {
+        goToSmooth(activeIndex - 1);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [activeIndex, goToSmooth, sections.length]);
+
+  /* =========================
+     KEYBOARD NAV
+  ========================= */
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown') goToSmooth(activeIndex + 1);
+      if (e.key === 'ArrowUp') goToSmooth(activeIndex - 1);
+    };
+
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [activeIndex, goToSmooth]);
+
+  return (
+    <>
+      {/* <CursorAura /> */}
+
+      {/* <ScrollParallaxBg activeIndex={activeIndex} /> */}
+      {/* 🔥 Progress Bar */}
+      <motion.div
+        className='fixed top-0 left-0 h-0.75 bg-black z-50'
+        animate={{
+          width: `${((activeIndex + 1) / sections.length) * 100}%`,
+        }}
+      />
+      <div className='relative w-16 h-16 mb-4'>
+        {/* 🔥 Light reflection */}
+        <div
+          className='
+    absolute top-1 left-2 w-3 h-3 rounded-full
+    bg-white/60 blur-sm
+  '
+        />
+      </div>
+      {/* 🔥 Background */}
+      {/* <motion.div
+        className='fixed inset-0 -z-10'
+        animate={{ background: backgrounds[activeIndex] }}
+        transition={{ duration: 0.8 }}
+      /> */}
+
+      {/* 🔥 Navbar */}
+
+      <Navbar
+        active={sections[safeIndex].id}
+        onNavigate={(id: string) => {
+          const index = sections.findIndex((s) => s.id === id);
+          if (index !== -1) goToInstant(index);
+        }}
+      />
+
+      {/* 🔥 Dot Nav */}
+      {/* <DotNavigation
+        active={sections[activeIndex].id}
+        onClick={(id: string) => {
+          const index = sections.findIndex((s) => s.id === id);
+          if (index !== -1) goToInstant(index);
+        }}
+      /> */}
+
+      {/* 🔥 Sections */}
+      <motion.div
+        className='fixed inset-0 overflow-hidden z-10 backdrop-blur-xl mb-28 sm:mb-0'
+        drag='y'
+        dragDirectionLock
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.2}
+        style={{ touchAction: 'none' }}
+        onDragEnd={(e, info) => {
+          if (isAnimating.current) return;
+
+          if (info.offset.y < -80 && activeIndex < sections.length - 1) {
+            goToSmooth(activeIndex + 1);
+          }
+
+          if (info.offset.y > 80 && activeIndex > 0) {
+            goToSmooth(activeIndex - 1);
+          }
+        }}
+      >
+        <AnimatePresence mode='wait'>
+          <Section
+            key={sections[safeIndex].id}
+            index={safeIndex}
+            activeIndex={safeIndex}
+          >
+            {(() => {
+              const ActiveComponent = sections[safeIndex].Component;
+              return <ActiveComponent />;
+            })()}
+          </Section>
+        </AnimatePresence>
+        {safeIndex === 0 && (
+          <ScrollArrow
+            direction='down'
+            onClick={() => goToSmooth(safeIndex + 1)}
+          />
+        )}
+
+        {activeIndex === sections.length - 1 && (
+          <ScrollArrow direction='up' onClick={() => goToSmooth(0)} />
+        )}
+
+        {activeIndex > 0 && activeIndex < sections.length - 1 && (
+          <ScrollArrow
+            direction='down' // 👈 choose what you prefer here
+            onClick={() => goToSmooth(activeIndex + 1)}
+          />
+        )}
+      </motion.div>
+    </>
+  );
+}

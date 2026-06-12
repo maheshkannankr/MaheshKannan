@@ -1,0 +1,41 @@
+import { PopupModelProvider } from '@/provider/PopupModelProvider';
+import './globals.css';
+import { Nunito, Tangerine } from 'next/font/google';
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['300', '400', '600', '700'],
+  variable: '--font-nunito',
+});
+
+const tangerine = Tangerine({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-tangerine',
+});
+
+export const metadata = {
+  title: 'Mahesh Portfolio',
+  description: 'Developer Portfolio',
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang='en'>
+      <body
+        className={`font-sans bg-background-light text-text-primary dark:bg-background-dark dark:text-text-inverse transition-colors duration-300 ${nunito.variable} ${tangerine.variable}`}
+      >
+        <PopupModelProvider>{children}</PopupModelProvider>
+      </body>
+    </html>
+  );
+}
