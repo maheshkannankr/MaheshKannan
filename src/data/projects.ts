@@ -1,4 +1,13 @@
-export const projects = [
+export type Project = {
+  id: number;
+  title: string;
+  role: string;
+  tools: string[];
+  achievements: string[];
+  github?: string;
+};
+
+export const projects: Project[] = [
   {
     id: 1,
     title: 'AI Form Builder & Workflow Automation Platform',

@@ -1,16 +1,16 @@
 'use client';
 
 import { createContext, useContext } from 'react';
+import { Project } from '@/data/projects';
 
 export type ModalType = 'PROJECT' | null;
 
-export type ModalState = {
-  type: ModalType;
-  data: any;
-};
+export type ModalState =
+  | { type: 'PROJECT'; data: Project }
+  | { type: null; data: null };
 
 export type PopupModelContextType = {
-  openModel: (type: ModalType, data?: any) => void;
+  openModel: (type: 'PROJECT', data: Project) => void;
   closeModel: () => void;
   modal: ModalState;
 };

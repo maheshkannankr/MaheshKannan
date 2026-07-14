@@ -34,7 +34,7 @@ export default function AboutSection() {
         >
           {/* ✅ JUSTIFIED TEXT */}
           <p className='text-gray/700 text-base sm:text-lg leading-relaxed text-justify'>
-            I'm Mahesh, a passionate full-stack developer specializing in
+            I&apos;m Mahesh, a passionate full-stack developer specializing in
             building modern, scalable web applications. I work extensively with
             React, Next.js, Node.js, and databases like MySQL and MongoDB. My
             focus is on creating clean, performant, and user-centric digital

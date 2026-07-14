@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import SkillGlassCard from '@/components/SkillGlassCard';
-import { Braces, Code, Database, Server } from 'lucide-react';
+import { Braces, Code, Database, Server, LucideIcon } from 'lucide-react';
 
 const skillsData = [
   {
@@ -50,7 +50,7 @@ const skillsData = [
   },
 ];
 
-const tabIcons: Record<string, any> = {
+const tabIcons: Record<string, LucideIcon> = {
   Frontend: Code,
   Backend: Server,
   Languages: Braces,

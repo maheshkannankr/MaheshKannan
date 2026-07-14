@@ -2,6 +2,7 @@
 
 import { useState, ReactNode, useEffect } from 'react';
 import { PopupModelContext, ModalState } from '@/context/PopupModelContext';
+import { Project } from '@/data/projects';
 
 import PopupModel from '@/components/PopupModel';
 import ProjectOverviewModal from '@/components/ProjectOverviewModal';
@@ -12,7 +13,7 @@ export const PopupModelProvider = ({ children }: { children: ReactNode }) => {
     data: null,
   });
 
-  const openModel = (type: any, data?: any) => {
+  const openModel = (type: 'PROJECT', data: Project) => {
     setModal({ type, data });
   };
 

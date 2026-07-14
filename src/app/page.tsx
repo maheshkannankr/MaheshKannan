@@ -32,7 +32,7 @@ export default function Home() {
         isAnimating.current = false;
       }, 650);
     },
-    [activeIndex, sections.length],
+    [activeIndex],
   );
 
   const goToInstant = (index: number) => {
@@ -66,7 +66,7 @@ export default function Home() {
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [activeIndex, goToSmooth, sections.length]);
+  }, [activeIndex, goToSmooth]);
 
   /* =========================
      KEYBOARD NAV

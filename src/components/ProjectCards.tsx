@@ -3,10 +3,11 @@
 import { motion } from 'framer-motion';
 import { ExternalLink, GitBranch, Folder, Terminal } from 'lucide-react';
 import { usePopupModel } from '@/context/PopupModelContext';
+import { Project } from '@/data/projects';
 import { useEffect, useState } from 'react';
 
 type Props = {
-  project: any;
+  project: Project;
 };
 
 export function ProjectCard({ project }: Props) {
@@ -71,7 +72,7 @@ export function ProjectCard({ project }: Props) {
               {project.title}
             </h3>
             <p className='text-xs sm:text-sm text-black/50 line-clamp-2'>
-              {project.description}
+              {project.role}
             </p>
           </div>
         </div>
